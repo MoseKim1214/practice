@@ -1,0 +1,74 @@
+mygraph = {
+    'edges' : [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (7, 'B', 'E'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (5, 'C', 'E'),
+        (8, 'C', 'B'),
+        (5, 'D', 'A'),
+        (6, 'D', 'F'),
+        (7, 'D', 'E'),
+        (9, 'D', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'B'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F','G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+        
+        
+    ]
+}
+
+linked = set()
+weight = list()
+mst = list()
+n1 = 0
+# 간선 추출 후 소팅까지
+def find(graph, node):
+    edges = mygraph['edges']
+    for edge in edges:
+        distance, before, after = edge
+        if before == node:
+            weight.append(edge)
+    weight.sort()
+    
+
+# 소팅한 리스트에서 맨 앞 데이터를 추출. 
+def select(data):
+    global n1
+    if len(data) == 0:
+        return
+    selection = data[0]
+    distance, before, after = data.pop(0)
+    
+    if before in linked and after in linked:
+        return select(data)
+    else:
+        linked.add(before)
+        linked.add(after)
+        mst.append(selection)
+        n1 = after
+    
+
+
+def prim(graph, node):
+    global n1
+    start = node
+    find(graph, start)
+    select(weight)
+    while True:
+        if len(weight) == 0:
+            break
+        find(graph, n1)
+        select(weight)
+    return mst
+        
+prim(mygraph, 'A')
